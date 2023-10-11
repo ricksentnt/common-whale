@@ -143,5 +143,16 @@ export default {
   // darkMode: 'class',
   // eslint-disable-next-line no-undef
   plugins: [require("daisyui")],
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          primary: '#00A707',
+          "primary-light": "#BAE380",
+          "base-100": "#FFFFFF",
+        }
+      }
+    ]
+  }
 }
 

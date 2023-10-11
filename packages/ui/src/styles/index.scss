@@ -12,6 +12,11 @@ h6 {
 }
 
 .button-primary-light {
-  @apply btn bg-primary-300 text-primary-950 font-semibold;
+  @apply btn bg-primary-300 text-primary-950 font-semibold border-0 capitalize;
   @apply hover:bg-primary-400;
+}
+
+.button-primary {
+  @apply btn bg-primary-500 text-white font-semibold border-0 capitalize;
+  @apply hover:bg-primary-600;
 }

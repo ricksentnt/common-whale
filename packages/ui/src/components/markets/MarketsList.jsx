@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { backendUrl } from '../../configs'
+import BidDialog from './BidDialog';
 
 export default function MarketsList() {
   const [markets, setMarkets] = useState()
@@ -9,12 +10,24 @@ export default function MarketsList() {
     const res = await axios({
       url: backendUrl + '/api/data/markets'
     })
+    console.log(res.data)
     setMarkets(res.data)
+    setSelectedMarket(res.data[0])
   }
 
   useEffect(() => {
     getMarkets()
-  }, [])
+
+    const interval = setInterval(() => {
+      getMarkets()
+    }, 15000);
+
+    document.getElementById('bid_modal').showModal()
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const [selectedMarket, setSelectedMarket] = useState()
 
   return (
     <div>
@@ -23,6 +36,8 @@ export default function MarketsList() {
           Markets
         </h2>
       </div>
+
+      <BidDialog selectedMarket={selectedMarket} />
 
       <div className='bg-white rounded-xl p-4 mt-4'>
         {markets && markets.map((market) => {
@@ -91,7 +106,16 @@ export default function MarketsList() {
               </div>
 
               <div className="collapse-content">
-                <p>tabIndex={0} attribute is necessary to make the div focusable</p>
+                <div className='w-full flex flex-col'>
+                  <button
+                    onClick={() => {
+                      document.getElementById('bid_modal').showModal()
+                      setSelectedMarket(market)
+                    }}
+                    className='button-primary-light'>
+                    Bid
+                  </button>
+                </div>
               </div>
             </div>
           )
