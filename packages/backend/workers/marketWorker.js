@@ -72,18 +72,25 @@ export const marketWorker = async (server) => {
             name: token.token.name,
             symbol: token.token.symbol,
             decimals: token.token.decimals,
+            logo: 'https://assets.coingecko.com/coins/images/10775/standard/COMP.png?1696510737'
           },
           update: {
             address: token.token.address,
             name: token.token.name,
             symbol: token.token.symbol,
             decimals: token.token.decimals,
+            logo: 'https://assets.coingecko.com/coins/images/10775/standard/COMP.png?1696510737'
           }
         })
       }
 
       // Upsert MarketCollateral
       for (const token of tokens) {
+        // skip if token.token.address === market.configuration.baseToken.token.address
+        if (token.token.address === market.configuration.baseToken.token.address) {
+          continue
+        }
+
         await prismaClient.marketCollateral.upsert({
           where: {
             marketId_collateralId: {
