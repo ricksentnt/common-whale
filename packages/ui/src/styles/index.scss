@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Unbounded", sans-serif;
+}
+
+.button-primary-light {
+  @apply btn bg-primary-300 text-primary-950 font-semibold;
+  @apply hover:bg-primary-400;
+}
