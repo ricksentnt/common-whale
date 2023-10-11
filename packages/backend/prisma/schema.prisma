@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Market {
+  marketId String @id
+
+  dailyUsages MarketDailyUsage[]
+  collaterals MarketCollateral[]
+  symbol      String
+
+  createdAt_ DateTime @default(now())
+  updatedAt_ DateTime @updatedAt
+}
+
+model MarketDailyUsage {
+  marketId  String
+  day       String
+  timestamp Int
+
+  interactionCount Int
+  liquidationCount Int
+  uniqueUserCount  Int
+
+  market Market @relation(fields: [marketId], references: [marketId], onDelete: Cascade)
+
+  @@id([marketId, day])
+}
+
+model MarketCollateral {
+  marketId     String
+  collateralId String
+
+  baseId      String
+  baseAddress String
+
+  collateralAddress String
+
+  collateralStats CollateralStats?
+
+  market Market @relation(fields: [marketId], references: [marketId])
+
+  baseToken       Token @relation(name: "BaseToken", fields: [baseAddress], references: [id], onDelete: Cascade)
+  collateralToken Token @relation(name: "CollateralToken", fields: [collateralAddress], references: [id], onDelete: Cascade)
+
+  createdAt_ DateTime @default(now())
+  updatedAt_ DateTime @updatedAt
+
+  @@unique([marketId, collateralId])
+}
+
+model CollateralStats {
+  marketId     String
+  collateralId String
+
+  reserves    String
+  reservesUsd String
+
+  balance    String
+  balanceUsd String
+
+  liquidationFactor         String
+  liquidateCollateralFactor String
+
+  priceFeed    String
+  lastPriceUsd String
+
+  marketCollateral MarketCollateral @relation(fields: [marketId, collateralId], references: [marketId, collateralId], onDelete: Cascade)
+
+  createdAt_ DateTime @default(now())
+  updatedAt_ DateTime @updatedAt
+
+  @@unique([marketId, collateralId])
+}
+
+model Token {
+  id       String  @id
+  address  String
+  name     String
+  symbol   String
+  decimals Int
+  logo     String?
+
+  marketsAsBase       MarketCollateral[] @relation(name: "BaseToken")
+  marketsAsCollateral MarketCollateral[] @relation(name: "CollateralToken")
+
+  createdAt_ DateTime @default(now())
+  updatedAt_ DateTime @updatedAt
+}

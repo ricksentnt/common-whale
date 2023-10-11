@@ -1,0 +1,1 @@
+export const COMPOUND_FINANCE_V3_SUBGRAPH="https://api.thegraph.com/subgraphs/name/papercliplabs/compound-v3"
