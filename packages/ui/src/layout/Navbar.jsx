@@ -1,6 +1,7 @@
-import React from 'react'
+import { Link, useLocation } from 'react-router-dom'
 
 export default function Navbar() {
+  const location = useLocation()
   const NAVIGATIONS = [
     {
       id: 'markets',
@@ -23,17 +24,16 @@ export default function Navbar() {
       <div className='container mx-auto p-4'>
         <div className='flex flex-row items-center justify-between'>
           <div className='flex flex-row items-center gap--8'>
-            <h1 className='text-2xl text-white font-semibold'>
-              CommonWhale
-            </h1>
+            <img src="/logo-horizontal.svg" alt="CommonWhale" className='w-[14rem]' />
 
-            <div className='flex flex-row items-center gap-8 ml-12'>
+            <div className='flex flex-row items-center gap-8 ml-16'>
               {NAVIGATIONS.map((navigation) => {
-                const isActive = navigation.href === window.location.pathname
+                const isActive = location.pathname === navigation.href
+
                 return (
-                  <button className={`${isActive ? 'button-primary-light' : 'btn btn-ghost text-primary-300'} !rounded-full !font-semibold !px-6 uppercase`} key={navigation.id}>
+                  <Link to={navigation.href} className={`${isActive ? 'button-primary-light' : 'btn btn-ghost text-primary-300'} !rounded-full !font-semibold !px-6 capitalize`} key={navigation.id}>
                     {navigation.label}
-                  </button>
+                  </Link>
                 )
               })}
             </div>

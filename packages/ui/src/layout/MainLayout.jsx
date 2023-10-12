@@ -1,15 +1,19 @@
 
 import React from 'react'
 import Navbar from './Navbar'
+import { Outlet } from 'react-router-dom'
+import { MarketProvider } from '../context/MarketContext';
 
 export default function MainLayout({ children }) {
   return (
-    <div className='flex flex-col w-screen h-screen bg-primary-950'>
-      <Navbar />
+    <MarketProvider>
+      <div className='flex flex-col w-screen min-h-screen'>
+        <Navbar />
 
-      <div>
-        {children}
+        <div className='mt-12 pb-[20rem]'>
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </MarketProvider>
   )
 }

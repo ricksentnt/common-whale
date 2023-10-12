@@ -22,6 +22,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@coingecko/cryptoformat": "^0.5.4",
     "@fastify/cors": "^8.4.0",
     "@prisma/client": "^5.4.2",
     "axios": "^1.5.1",

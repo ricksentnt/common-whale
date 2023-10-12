@@ -20,3 +20,8 @@ h6 {
   @apply btn bg-primary-500 text-white font-semibold border-0 capitalize;
   @apply hover:bg-primary-600;
 }
+
+.button-primary-soft {
+  @apply btn bg-primary-100 text-primary-950 font-semibold border-0 capitalize;
+  @apply hover:bg-primary-200;
+}

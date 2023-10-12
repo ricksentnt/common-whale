@@ -13,9 +13,11 @@ datasource db {
 model Market {
   marketId String @id
 
+  symbol String
+  name   String
+
   dailyUsages MarketDailyUsage[]
   collaterals MarketCollateral[]
-  symbol      String
 
   createdAt_ DateTime @default(now())
   updatedAt_ DateTime @updatedAt
@@ -69,6 +71,9 @@ model CollateralStats {
 
   liquidationFactor         String
   liquidateCollateralFactor String
+
+  borrowCollateralFactor String
+  supplyCap              String
 
   priceFeed    String
   lastPriceUsd String

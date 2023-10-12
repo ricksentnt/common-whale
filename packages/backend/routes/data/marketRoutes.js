@@ -5,7 +5,10 @@ export const marketRoutes = async (server) => {
     try {
       const markets = await prismaClient.marketCollateral.findMany({
         orderBy: {
-          marketId: 'asc'
+          // marketId: 'asc'
+          collateralStats: {
+            reservesUsd: 'desc'
+          }
         },
         include: {
           baseToken: true,

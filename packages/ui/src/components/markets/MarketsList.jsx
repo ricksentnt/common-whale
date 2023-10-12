@@ -1,33 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { backendUrl } from '../../configs'
-import BidDialog from './BidDialog';
+import { useMarket } from '../../context/MarketContext'
+import { Link } from 'react-router-dom'
+import { formatCurrency } from '@coingecko/cryptoformat'
+import SupplyCap from '../shared/SupplyCap'
 
 export default function MarketsList() {
-  const [markets, setMarkets] = useState()
-
-  const getMarkets = async () => {
-    const res = await axios({
-      url: backendUrl + '/api/data/markets'
-    })
-    console.log(res.data)
-    setMarkets(res.data)
-    setSelectedMarket(res.data[0])
-  }
-
-  useEffect(() => {
-    getMarkets()
-
-    const interval = setInterval(() => {
-      getMarkets()
-    }, 15000);
-
-    document.getElementById('bid_modal').showModal()
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const [selectedMarket, setSelectedMarket] = useState()
+  const { markets, setSelectedMarket } = useMarket()
 
   return (
     <div>
@@ -37,17 +17,15 @@ export default function MarketsList() {
         </h2>
       </div>
 
-      <BidDialog selectedMarket={selectedMarket} />
-
       <div className='bg-white rounded-xl p-4 mt-4'>
         {markets && markets.map((market) => {
           return (
             <div key={`${market.marketId}-${market.collateralId}`} tabIndex={0} className="collapse collapse-arrow border-b border-b-black/10 rounded-none text-black">
               <input type="checkbox" className="peer" />
               <div className="collapse-title">
-                <div className='flex flex-row items-center gap-8 justify-between'>
+                <div className='flex flex-row items-center gap-8'>
                   {/* Collateral Token */}
-                  <div className='flex flex-row items-center gap-3'>
+                  <div className='flex flex-row items-center gap-3 w-[20%]'>
                     <img src={market.collateralToken.logo} alt={market.collateralToken.symbol} className='w-8 h-8 rounded-full' />
                     <div>
                       <div className='text-black/60 text-sm'>
@@ -60,7 +38,7 @@ export default function MarketsList() {
                   </div>
 
                   {/* Bid Denom/Base Token */}
-                  <div className='flex flex-row items-center gap-3'>
+                  <div className='flex flex-row items-center gap-3 w-[20%]'>
                     <img src={market.baseToken.logo} alt={market.baseToken.symbol} className='w-8 h-8 rounded-full' />
                     <div>
                       <div className='text-black/60 text-sm'>
@@ -73,32 +51,42 @@ export default function MarketsList() {
                   </div>
 
                   {/* TVL */}
-                  <div>
+                  <div className='w-[20%]'>
                     <div className='text-black/60 text-sm'>
-                      TVL
+                      Total Supplied
                     </div>
-                    <div className='max-w-[6rem] overflow-hidden text-ellipsis whitespace-nowrap'>
-                      {market.collateralStats?.balanceUsd}
+
+                    <div className='flex flex-row items-center gap-2'>
+                      <div className='overflow-hidden text-ellipsis whitespace-nowrap'>
+                        {formatCurrency(market.collateralStats.balanceUsd, "USD")}
+                      </div>
+
+                      <SupplyCap
+                        supply={market.collateralStats.balance}
+                        supplyCap={market.collateralStats.supplyCap}
+                        supplyUsd={market.collateralStats.balanceUsd}
+                        symbol={market.collateralToken.symbol}
+                      />
                     </div>
                   </div>
 
                   {/* Pool Size */}
-                  <div>
+                  <div className='w-[20%]'>
                     <div className='text-black/60 text-sm'>
-                      Pool Size
+                      Reserves
                     </div>
-                    <div className='max-w-[6rem] overflow-hidden text-ellipsis whitespace-nowrap'>
-                      {market.collateralStats?.balanceUsd}
+                    <div className='overflow-hidden text-ellipsis whitespace-nowrap'>
+                      {formatCurrency(market.collateralStats.reservesUsd, "USD")}
                     </div>
                   </div>
 
                   {/* Liquidate Factor */}
-                  <div className='mr-12'>
+                  <div className='mr-12 w-[15%]'>
                     <div className='text-black/60 text-sm'>
                       Liquidation Factor
                     </div>
-                    <div className='max-w-[6rem] overflow-hidden text-ellipsis whitespace-nowrap'>
-                      {parseFloat(market.collateralStats.liquidationFactor).toFixed(2) * 100}%
+                    <div>
+                      {parseFloat(market.collateralStats.liquidateCollateralFactor).toFixed(2) * 100}%
                     </div>
                   </div>
 
@@ -107,14 +95,12 @@ export default function MarketsList() {
 
               <div className="collapse-content">
                 <div className='w-full flex flex-col'>
-                  <button
-                    onClick={() => {
-                      document.getElementById('bid_modal').showModal()
-                      setSelectedMarket(market)
-                    }}
-                    className='button-primary-light'>
+                  <Link
+                    to={`/order?marketId=${market.marketId}&collateralId=${market.collateralId}`}
+                    className='button-primary-light'
+                  >
                     Bid
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

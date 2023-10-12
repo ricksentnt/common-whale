@@ -8,7 +8,7 @@ query Markets {
   markets(orderBy: id, orderDirection: asc) {
     id
     accounting {
-      market{
+      market {
         id
         dailyUsage(orderBy: timestamp, orderDirection: desc, first: 3) {
           day
@@ -35,6 +35,7 @@ query Markets {
           decimals
         }
       }
+      name
     }
     collateralBalances(orderBy: id, orderDirection: desc) {
       id
@@ -56,6 +57,8 @@ query Markets {
         liquidateCollateralFactor
         priceFeed
         lastPriceUsd
+        borrowCollateralFactor
+        supplyCap
       }
     }
   }

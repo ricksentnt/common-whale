@@ -4,7 +4,7 @@ import { prismaClient } from '../utils/prisma.js';
 
 export const marketWorker = async (server) => {
   // run every 1s 
-  cron.schedule('*/60 * * * * *', async () => {
+  cron.schedule('*/15 * * * * *', async () => {
     getCompoundFinanceV3Markets()
   });
 
@@ -21,10 +21,12 @@ export const marketWorker = async (server) => {
         },
         create: {
           marketId: market.id,
-          symbol: market.configuration.symbol
+          symbol: market.configuration.symbol,
+          name: market.configuration.name,
         },
         update: {
-          symbol: market.configuration.symbol
+          symbol: market.configuration.symbol,
+          name: market.configuration.name,
         }
       })
 
@@ -72,14 +74,14 @@ export const marketWorker = async (server) => {
             name: token.token.name,
             symbol: token.token.symbol,
             decimals: token.token.decimals,
-            logo: 'https://assets.coingecko.com/coins/images/10775/standard/COMP.png?1696510737'
+            logo: `/assets/token/${token.token.address}.webp`
           },
           update: {
             address: token.token.address,
             name: token.token.name,
             symbol: token.token.symbol,
             decimals: token.token.decimals,
-            logo: 'https://assets.coingecko.com/coins/images/10775/standard/COMP.png?1696510737'
+            logo: `/assets/token/${token.token.address}.webp`
           }
         })
       }
@@ -137,6 +139,8 @@ export const marketWorker = async (server) => {
             liquidateCollateralFactor: collateralBalance.collateralToken.liquidateCollateralFactor,
             priceFeed: collateralBalance.collateralToken.priceFeed,
             lastPriceUsd: collateralBalance.collateralToken.lastPriceUsd,
+            borrowCollateralFactor: collateralBalance.collateralToken.borrowCollateralFactor,
+            supplyCap: collateralBalance.collateralToken.supplyCap
           },
           update: {
             reserves: collateralBalance.reserves,
@@ -147,6 +151,8 @@ export const marketWorker = async (server) => {
             liquidateCollateralFactor: collateralBalance.collateralToken.liquidateCollateralFactor,
             priceFeed: collateralBalance.collateralToken.priceFeed,
             lastPriceUsd: collateralBalance.collateralToken.lastPriceUsd,
+            borrowCollateralFactor: collateralBalance.collateralToken.borrowCollateralFactor,
+            supplyCap: collateralBalance.collateralToken.supplyCap
           }
         }).catch(e => {
           console.log({
