@@ -4,7 +4,7 @@ import { prismaClient } from '../utils/prisma.js';
 
 export const marketWorker = async (server) => {
   // run every 1s 
-  cron.schedule('*/15 * * * * *', async () => {
+  cron.schedule('*/30 * * * * *', async () => {
     getCompoundFinanceV3Markets()
   });
 
