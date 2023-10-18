@@ -1,3 +1,4 @@
+import React from "react";
 import { createContext, useContext, useEffect, useState } from "react"
 import { backendUrl } from "../configs"
 import axios from "axios"
@@ -24,15 +25,15 @@ export const MarketProvider = ({
     // setSelectedMarket(res.data[0])
   }
 
-  useEffect(() => {
-    getMarkets()
+  // useEffect(() => {
+  //   getMarkets()
 
-    const interval = setInterval(() => {
-      getMarkets()
-    }, 10000);
+  //   const interval = setInterval(() => {
+  //     getMarkets()
+  //   }, 10000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
 
   useEffect(() => {

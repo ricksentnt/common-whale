@@ -25,7 +25,7 @@ export default function OrderPage() {
   }, [markets, selectedMarket, setSelectedMarket])
 
   return (
-    <div className='container mx-auto px-4'>
+    <div className='container mx-auto px-4 animate-fade-up animate-ease-in-out'>
       <div className='relative z-10'>
         <h1 className='text-white text-2xl text-center font-semibold'>
           Place a Bid on Discounted Assets
